@@ -4,10 +4,18 @@ import { encodedRedirect } from "@/utils/utils";
 import { createClient } from "@/utils/supabase/server";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import {jwtDecode} from 'jwt-decode';
+
+
+interface CustomJwtPayload {
+  user_role?: string; // Define your custom claim
+}
 
 export const signUpAction = async (formData: FormData) => {
   const email = formData.get("email")?.toString();
   const password = formData.get("password")?.toString();
+  const role = formData.get('role')?.toString() || 'student';
+
   const supabase = await createClient();
   const origin = (await headers()).get("origin");
 
@@ -44,7 +52,7 @@ export const signInAction = async (formData: FormData) => {
   const password = formData.get("password") as string;
   const supabase = await createClient();
 
-  const { error } = await supabase.auth.signInWithPassword({
+  const { data: sessionData, error } = await supabase.auth.signInWithPassword({
     email,
     password,
   });
@@ -53,6 +61,24 @@ export const signInAction = async (formData: FormData) => {
     return encodedRedirect("error", "/sign-in", error.message);
   }
 
+  // Check if the session exists and decode the token
+  const session = sessionData.session;
+
+  if (session) {
+    const token = session.access_token;
+
+    if (token) {
+      const decoded = jwtDecode<CustomJwtPayload>(token);
+      const userRole = decoded.user_role;
+
+      if (userRole) {
+        // Redirect based on the user's role
+        return redirect(`/${userRole}`);
+      }
+    }
+  }
+
+  // Default redirect if no role is found
   return redirect("/protected");
 };
 
