@@ -1,6 +1,4 @@
 import Link from "next/link"
-import NextLogo from "./next-logo";
-import SupabaseLogo from "./supabase-logo";
 import { Button } from "./ui/button";
 
 export default function Header() {

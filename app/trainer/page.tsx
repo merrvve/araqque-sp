@@ -1,5 +1,5 @@
-import { FileUpload } from "@/components/FileUpload";
-import FetchDataSteps from "@/components/tutorial/fetch-data-steps";
+import CreateHomeWork from "@/components/trainer/CreateHomework";
+import { SideBar } from "@/components/trainer/TrainerSidebar";
 import { createClient } from "@/utils/supabase/server";
 import { InfoIcon } from "lucide-react";
 import { redirect } from "next/navigation";
@@ -16,11 +16,18 @@ export default async function ProtectedPage() {
   }
 
   return (
-    <div className="flex-1 w-full flex flex-col gap-12">
+    <div className="w-full grid grid-cols-2">
+      <div className="w-[40rem]">
+      <SideBar />
+      </div>
+      
+<div className="flex-1 w-full flex flex-col gap-12">
+      
+      <CreateHomeWork />
       <div className="w-full">
         <div className="bg-accent text-sm p-3 px-5 rounded-md text-foreground flex gap-3 items-center">
           <InfoIcon size="16" strokeWidth={2} />
-          trainer
+          Ödev Kodu:
         </div>
       </div>
       <div className="flex flex-col gap-2 items-start">
@@ -31,5 +38,7 @@ export default async function ProtectedPage() {
       </div>
       
     </div>
+    </div>
+    
   );
 }
