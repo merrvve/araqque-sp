@@ -1,5 +1,5 @@
 [[headers]]
   for = "/*" # Matches all routes
   [headers.values]
-    Access-Control-Allow-Origin = "https://araqque.netlify.app", "https://proxy.proxy-production.svc.cluster.local:80"
-    Content-Type = "application/json"
+    Access-Control-Allow-Origin = "*" # Single value or wildcard (*)
+    Content-Type = "application/json" # Correct key-value format
