@@ -1,5 +1,0 @@
-[[headers]]
-  for = "/*" # Matches all routes
-  [headers.values]
-    Access-Control-Allow-Origin = "*" # Single value or wildcard (*)
-    Content-Type = "application/json" # Correct key-value format
