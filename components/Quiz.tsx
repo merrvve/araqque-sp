@@ -12,7 +12,7 @@ export default function Quiz() {
   const [answers, setAnswers] = useState<string[]>(Array(9).fill("")); 
   const [correctCount, setCorrectCount] = useState<number>(0);
   const [answerStatuses, setAnswerStatuses] = useState<boolean[]>([]);
-  const { questions } = useQuestionStore();
+  const { questions, updateQuestionExamin } = useQuestionStore();
 
   const updateAnswer = (index: number, answer: string) => {
     const newAnswers = [...answers];
@@ -49,9 +49,13 @@ export default function Quiz() {
     const lowerStudentAnswer = student_answer.toLowerCase();
 
     if (question.question_type === "Çoktan Seçmeli Test Sorusu") {
-      return lowerCorrectAnswer[0] === lowerStudentAnswer[0];
+      const isCorrect = lowerCorrectAnswer[0] === lowerStudentAnswer[0]
+      updateQuestionExamin(question.id, isCorrect )
+      return isCorrect;
     }
-    return lowerCorrectAnswer === lowerStudentAnswer;
+    const isCorrect =  lowerCorrectAnswer === lowerStudentAnswer;
+    updateQuestionExamin(question.id, isCorrect )
+    return isCorrect;
   }
 
   return (

@@ -6,4 +6,5 @@ export interface Question {
     correct_answer: string;
     student_answer?: string;
     completion_time?: number;
+    isCorrect?: boolean;
 }

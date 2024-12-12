@@ -8,6 +8,7 @@ interface QuestionStore {
     removeQuestion: (id: number) => void;
     clearQuestions: () => void;
     updateQuestionTime: (index: number, timeSpent: number) => void;
+    updateQuestionExamin: (index: number, isCorrect: boolean) => void;
 }
 
 const useQuestionStore = create<QuestionStore>((set: any) => ({
@@ -28,6 +29,15 @@ const useQuestionStore = create<QuestionStore>((set: any) => ({
           };
           return { questions: updatedQuestions };
         }),
+    updateQuestionExamin: (index: number, isCorrect: boolean) =>
+          set((state: any) => {
+            const updatedQuestions = [...state.questions];
+            updatedQuestions[index] = {
+              ...updatedQuestions[index],
+              isCorrect: isCorrect,
+            };
+            return { questions: updatedQuestions };
+          }),
 }));
 
 export default useQuestionStore;
