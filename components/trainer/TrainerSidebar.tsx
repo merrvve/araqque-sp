@@ -1,4 +1,5 @@
-import { FaBook, FaClipboardList, FaUserCircle, FaSignOutAlt } from "react-icons/fa";
+import { Book, ClipboardList, UserCircle, LogOut } from "lucide-react";
+
 
 export const SideBar = () => {
     return (
@@ -16,7 +17,7 @@ export const SideBar = () => {
                         href="#"
                         className="flex items-center px-4 py-3 rounded-lg hover:bg-gray-100 transition"
                     >
-                        <FaBook size={24}  />
+                        <Book size={24}  />
                         <span className="mx-3">Ödevler</span>
                     </a>
 
@@ -25,7 +26,7 @@ export const SideBar = () => {
                         href="#"
                         className="flex items-center px-4 py-3 rounded-lg hover:bg-gray-100 transition"
                     >
-                        <FaClipboardList size={24}  />
+                        <ClipboardList size={24}  />
                         <span className="mx-3">Değerlendirme Sonuçları</span>
                     </a>
 
@@ -34,7 +35,7 @@ export const SideBar = () => {
                         href="#"
                         className="flex items-center px-4 py-3 rounded-lg hover:bg-gray-100 transition"
                     >
-                        <FaUserCircle size={24}  />
+                        <UserCircle size={24}  />
                         <span className="mx-3">Kullanıcı Profilim</span>
                     </a>
 
@@ -43,7 +44,7 @@ export const SideBar = () => {
                         href="#"
                         className="flex items-center px-4 py-3 rounded-lg hover:bg-red-300 transition"
                     >
-                        <FaSignOutAlt size={24}  />
+                        <LogOut size={24}  />
                         <span className="mx-3">Çıkış Yap</span>
                     </a>
                 </nav>

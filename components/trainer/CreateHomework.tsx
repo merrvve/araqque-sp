@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from 'react';
-import { FaCopy, FaShare } from 'react-icons/fa'; // Importing the Copy icon from react-icons
+import { Share2, Copy } from 'lucide-react'; 
 
 type Props = {
   user: any;
@@ -102,14 +102,14 @@ const CreateHomework: React.FC<Props> = ({ user }) => {
               onClick={handleCopy}
               className="p-2 bg-slate-900 text-white rounded-md hover:bg-slate-700"
             >
-              <FaCopy />
+              <Copy />
             </button>
             <button
               type="button"
               onClick={handleShare}
               className="p-2 bg-slate-600 text-white rounded-md hover:bg-slate-700"
             >
-              <FaShare />
+              <Share2 />
             </button>
           </div>
         </div>

@@ -48,7 +48,7 @@ export default function RootLayout({
                   
                 </div>
               </nav>
-              <div className="flex w-full md:p-5 p-1">
+              <div className="w-full md:p-5 p-1">
                 {children}
               </div>
 
