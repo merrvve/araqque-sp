@@ -14,7 +14,7 @@ export const SideBar = () => {
                 <nav className="flex-1 px-4 py-4 space-y-2">
                     {/* Homeworks */}
                     <a
-                        href="#"
+                        href="/trainer/homework"
                         className="flex items-center px-4 py-3 rounded-lg hover:bg-gray-100 transition"
                     >
                         <Book size={24}  />
