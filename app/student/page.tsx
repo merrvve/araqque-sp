@@ -1,15 +1,13 @@
+"use client";
+
 import { FileUpload } from "@/components/FileUpload";
-import FetchDataSteps from "@/components/tutorial/fetch-data-steps";
-import { createClient } from "@/utils/supabase/server";
+import { useAuthStore } from "@/stores/authStore";
+
 import { InfoIcon } from "lucide-react";
 import { redirect } from "next/navigation";
 
-export default async function ProtectedPage() {
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+export default function StudentPage() {
+ const { user, setUser } = useAuthStore();
 
   if (!user) {
     return redirect("/sign-in");

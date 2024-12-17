@@ -4,21 +4,25 @@ import { Question } from '../types/question'; // Adjust the path according to yo
 
 interface QuestionStore {
     questions: Question[];
+    homeworkId: string;
     addQuestion: (question: Question) => void;
     removeQuestion: (id: number) => void;
     clearQuestions: () => void;
+    setHomeworkId: (id: string) => void;
     updateQuestionTime: (index: number, timeSpent: number) => void;
     updateQuestionExamin: (index: number, isCorrect: boolean) => void;
 }
 
 const useQuestionStore = create<QuestionStore>((set: any) => ({
     questions: [],
+    homeworkId: "",
     addQuestion: (question: Question) => set((state: any) => ({
         questions: [...state.questions, question],
     })),
     removeQuestion: (id: number) => set((state: any) => ({
         questions: state.questions.filter((question : Question) => question.id !== id),
     })),
+    setHomeworkId: (homeworkId: string) => set({homeworkId: homeworkId}),
     clearQuestions: () => set({ questions: [] }),
     updateQuestionTime: (index: number, timeSpent: number) =>
         set((state: any) => {

@@ -24,7 +24,7 @@ export default async function HomeworksPage() {
     console.error("Error fetching homeworks:", error);
     return <div>Error loading homeworks.</div>;
   }
-console.log(homeworks,error)
+
   return (
     <div className="w-full flex flex-row gap-20">
       <SideBar />

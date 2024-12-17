@@ -5,14 +5,24 @@ import QuestionList from "./QuestionList";
 import { CountdownTimer } from "./CountdownTimer";
 import useQuestionStore from "../stores/questionStore";
 import { Question } from "@/types/question";
-
+import { QuizResult } from "@/types/QuizResult";
+import { useAuthStore } from "@/stores/authStore";
+import { redirect } from "next/navigation";
+import { createClient } from "@/utils/supabase/client";
 export default function Quiz() {
   const [activeQuestion, setActiveQuestion] = useState(0);
   const [quizState, setQuizState] = useState(true);
   const [answers, setAnswers] = useState<string[]>(Array(9).fill("")); 
   const [correctCount, setCorrectCount] = useState<number>(0);
   const [answerStatuses, setAnswerStatuses] = useState<boolean[]>([]);
-  const { questions, updateQuestionExamin } = useQuestionStore();
+  const { questions, updateQuestionExamin, homeworkId } = useQuestionStore();
+  const { user } = useAuthStore(); 
+
+  if(!user) {
+    redirect('/sign-in')
+  }
+
+  const supabase = createClient();
 
   const updateAnswer = (index: number, answer: string) => {
     const newAnswers = [...answers];
@@ -33,6 +43,20 @@ export default function Quiz() {
     setQuizState(false);
   }
 
+  const saveQuizResult = async (quizResult: QuizResult) => {
+    try {
+      const { data, error } = await supabase
+        .from("quiz_results") // Replace with your table name
+        .insert([quizResult])
+        .select()
+        .single();
+        
+      console.log(data,error)
+      console.log("Quiz result saved successfully:", data);
+    } catch (error) {
+      console.error("Error saving quiz result:", error);
+    }
+  };
   // Check answers once when the quiz ends
   useEffect(() => {
     if (!quizState) {
@@ -41,6 +65,18 @@ export default function Quiz() {
       );
       setAnswerStatuses(statuses);
       setCorrectCount(statuses.filter((status: any) => status).length);
+
+
+
+      const quizResult: QuizResult = {
+        student_id: user.id,
+        homework_id: homeworkId,
+        questions: questions
+      }
+      console.log(quizResult);
+      saveQuizResult(quizResult);
+
+      
     }
   }, [quizState]);
 
@@ -50,11 +86,11 @@ export default function Quiz() {
 
     if (question.question_type === "Çoktan Seçmeli Test Sorusu") {
       const isCorrect = lowerCorrectAnswer[0] === lowerStudentAnswer[0]
-      updateQuestionExamin(question.id, isCorrect )
+     
       return isCorrect;
     }
     const isCorrect =  lowerCorrectAnswer === lowerStudentAnswer;
-    updateQuestionExamin(question.id, isCorrect )
+    
     return isCorrect;
   }
 

@@ -29,10 +29,7 @@ export const POST = async (req, res) => {
      
     }
 
-    let query = supabase.from('homework').select('*');
-    const { data2, error2 } = await query;
-    console.log(data2,error2,"22")
-    console.log("data",data,"error",error)
+    
     return NextResponse.json({ id: data.id }, { status: 201 });
   } catch (error) {
     console.error('Error creating homework2:', error);

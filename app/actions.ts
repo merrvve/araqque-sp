@@ -14,7 +14,7 @@ interface CustomJwtPayload {
 export const signUpAction = async (formData: FormData) => {
   const email = formData.get("email")?.toString();
   const password = formData.get("password")?.toString();
-  const role = formData.get('role')?.toString() || 'student';
+
 
   const supabase = await createClient();
   const origin = (await headers()).get("origin");
@@ -79,7 +79,7 @@ export const signInAction = async (formData: FormData) => {
   }
 
   // Default redirect if no role is found
-  return redirect("/protected");
+  return redirect("/");
 };
 
 export const forgotPasswordAction = async (formData: FormData) => {

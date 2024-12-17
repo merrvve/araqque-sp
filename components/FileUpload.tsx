@@ -5,6 +5,7 @@ import { LoadingModal } from "./LoadingModal";
 import { LoadingState } from "@/types/loadingState";
 import useQuestionStore from '../stores/questionStore';
 import { Question } from '../types/question';
+import { Input } from "./ui/input";
 
 
 export const FileUpload = () => {
@@ -23,7 +24,7 @@ export const FileUpload = () => {
     const selectedFile = e.target.files[0];
     setFile(selectedFile);
   };
-  const { questions, addQuestion, clearQuestions } = useQuestionStore();
+  const { questions, addQuestion, clearQuestions, setHomeworkId } = useQuestionStore();
   
   let homeworkText = "";
   
@@ -191,6 +192,9 @@ export const FileUpload = () => {
           <li>&apos;Testi Oluştur&apos;a tıklayın.</li>
         </ol>
         <form onSubmit={handleSubmit}>
+          <div>
+            <Input type="text" name="homeworkId" onChange={(e: any)=>setHomeworkId(e.target.value)}/>
+          </div>
           <div className="flex items-center justify-center w-full mb-3">
             <label
               htmlFor="fileInput"
