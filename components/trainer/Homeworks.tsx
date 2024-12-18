@@ -1,43 +1,50 @@
 "use client";
 
 import { Homework } from "@/types/Homework";
+import { useRouter } from "next/navigation";
 
 type Props = {
-    user: any;
-    homeworks: Homework[];
-  };
+  user: any;
+  homeworks: Homework[];
+};
 
 const Homeworks: React.FC<Props> = ({ user, homeworks }) => {
+  const router = useRouter();
 
-    
-    return (
-        <>
-        <h1 className="text-lg font-semibold m-2" >Ödevler</h1>
-        <div>
-            <table>
-                <thead>
-                    <th>Ödev Adı</th>
-                    <th>Ödev Kodu</th>
-                    <th>Değerlendirme Sonuçları</th>
-                </thead>
-                <tbody>
-                    {
-                        homeworks.map((homework:Homework)=> 
-                            <tr>
-                                 <td>{homework.name}</td>
-                                 <td>{homework.id}</td>
-                                 <td></td>
+  const handleRowClick = (homeworkId: string | undefined) => {
+    if(homeworkId) {
+        router.push(`/trainer/homework/${homeworkId}`); // Navigate to the results page
+    }
 
-                            </tr>
-                           
-                           
-                        )
-                    }
-                </tbody>
-            </table>
-        </div>
-        </>
-    )
- }
+  };
+  return (
+    <>
+      <h1 className="text-lg font-semibold m-2">Ödevler</h1>
+      <div>
+        <table  className="table-auto w-full border-collapse border border-gray-200">
+          <thead>
+            <tr>
+              <th className="border border-gray-300 px-4 py-2">Ödev Adı</th>
+              <th className="border border-gray-300 px-4 py-2">Ödev Kodu</th>
+              <th className="border border-gray-300 px-4 py-2">Değerlendirme Sonuçları</th>
+            </tr>
+          </thead>
+          <tbody>
+            {homeworks.map((homework: Homework) => (
+              <tr key={homework.id}
+                className="cursor-pointer hover:bg-slate-100"
+                onClick={() => handleRowClick(homework.id)}
+              >
+                <td className="border border-gray-300 px-4 py-2">{homework.name}</td>
+                <td className="border border-gray-300 px-4 py-2">{homework.id}</td>
+                <td className="border border-gray-300 px-4 py-2">Detay</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
+  );
+};
 
- export default Homeworks;
+export default Homeworks;

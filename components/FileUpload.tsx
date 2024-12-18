@@ -6,6 +6,7 @@ import { LoadingState } from "@/types/loadingState";
 import useQuestionStore from '../stores/questionStore';
 import { Question } from '../types/question';
 import { Input } from "./ui/input";
+import { Label } from "./ui/label";
 
 
 export const FileUpload = () => {
@@ -192,8 +193,11 @@ export const FileUpload = () => {
           <li>&apos;Testi Oluştur&apos;a tıklayın.</li>
         </ol>
         <form onSubmit={handleSubmit}>
-          <div>
-            <Input type="text" name="homeworkId" onChange={(e: any)=>setHomeworkId(e.target.value)}/>
+          <div className="mb-3">
+            <Label>Ödev Kodu</Label>
+            <Input type="text" name="homeworkId" onChange={(e: any)=>setHomeworkId(e.target.value)}
+            disabled placeholder="Test amaçlı otomatik atanmıştır"
+            />
           </div>
           <div className="flex items-center justify-center w-full mb-3">
             <label

@@ -70,7 +70,7 @@ export default function Quiz() {
 
       const quizResult: QuizResult = {
         student_id: user.id,
-        homework_id: homeworkId,
+        homework_id: "d31a8ae1-b0b3-4957-abcc-916b8ae54a38",
         questions: questions
       }
       console.log(quizResult);
