@@ -189,6 +189,7 @@ export const FileUpload = () => {
         </p>
         
         <ol className="list-inside list-decimal text-sm text-center sm:text-left">
+          <li className="mb-2">Ödev Kodunu Girin..</li>
           <li className="mb-2">Ödev Dosyanızı Yükleyin.</li>
           <li>&apos;Testi Oluştur&apos;a tıklayın.</li>
         </ol>
