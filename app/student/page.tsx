@@ -1,12 +1,15 @@
 
+
 import { FileUpload } from "@/components/FileUpload";
 
 import { InfoIcon } from "lucide-react";
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 
+
 export default async function StudentPage() {
   const supabase = await createClient();
+
 
   const {
     data: { user },
@@ -15,6 +18,7 @@ export default async function StudentPage() {
   if (!user) {
     return redirect("/sign-in");
   }
+
 
   return (
     <div className="flex-1 w-full flex flex-col gap-12">

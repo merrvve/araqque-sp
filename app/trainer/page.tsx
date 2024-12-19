@@ -1,6 +1,6 @@
 
 import CreateHomeWork from "@/components/trainer/CreateHomework";
-import { SideBar } from "@/components/trainer/TrainerSidebar";
+
 import { createClient } from "@/utils/supabase/server";
 
 import { redirect } from "next/navigation";
@@ -16,6 +16,7 @@ export default async function ProtectedPage() {
     return redirect("/sign-in");
   }
 
+  
   return (
 
       

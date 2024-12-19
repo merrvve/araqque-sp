@@ -7,7 +7,7 @@ export default function TrainerLayout({
   }) {
     return (
         <>
-          <div className="w-full flex flex-row gap-20">
+          <div className="w-full flex flex-col sm:flex-row gap-20">
              
               <SideBar />
              

@@ -6,10 +6,10 @@ import { Button } from "./ui/button";
 import { useAuthStore } from "@/stores/authStore"; // Import the Zustand store
 import { createClient } from "@/utils/supabase/client"; // Use client-side Supabase instance
 import { hasEnvVars } from "@/utils/supabase/check-env-vars";
-import { redirect, useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 export default function AuthButton() {
-  const { user, setUser } = useAuthStore(); 
-  const router = useRouter();
+  const { setUser } = useAuthStore(); 
+  const user = useAuthStore((state) => state.user);
   const handleSignOut = async () => {
     const supabase = createClient();
     await supabase.auth.signOut();

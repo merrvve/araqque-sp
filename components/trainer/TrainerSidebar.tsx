@@ -3,7 +3,7 @@ import { Book, ClipboardList, UserCircle, LogOut } from "lucide-react";
 
 export const SideBar = () => {
     return (
-        <div className="hidden md:flex flex-col w-64 border border-slate-100 rounded-lg shadow-lg overflow-hidden">
+        <div className="flex flex-col w-64 border border-slate-100 rounded-lg shadow-lg overflow-hidden">
             {/* Header */}
             <div className="flex items-center justify-center h-16">
                 <span className="text-xl font-bold uppercase">Menu</span>
