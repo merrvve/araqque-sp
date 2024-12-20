@@ -4,8 +4,7 @@ import { encodedRedirect } from "@/utils/utils";
 import { createClient } from "@/utils/supabase/server";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import {jwtDecode} from 'jwt-decode';
-
+import { jwtDecode } from "jwt-decode";
 
 interface CustomJwtPayload {
   user_role?: string; // Define your custom claim
@@ -14,7 +13,6 @@ interface CustomJwtPayload {
 export const signUpAction = async (formData: FormData) => {
   const email = formData.get("email")?.toString();
   const password = formData.get("password")?.toString();
-
 
   const supabase = await createClient();
   const origin = (await headers()).get("origin");

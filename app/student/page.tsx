@@ -1,24 +1,26 @@
-
-
+"use client";
 import { FileUpload } from "@/components/FileUpload";
 
 import { InfoIcon } from "lucide-react";
 import { redirect } from "next/navigation";
-import { createClient } from "@/utils/supabase/server";
 
+import { useAuthStore } from "@/stores/authStore";
 
-export default async function StudentPage() {
-  const supabase = await createClient();
+export default function StudentPage() {
+  // const supabase = createClient();
 
+  // const {
+  //   data: { user },
+  // } = await supabase.auth.getUser();
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // if (!user) {
+  //   return redirect("/sign-in");
+  // }
 
+  const { user } = useAuthStore();
   if (!user) {
     return redirect("/sign-in");
   }
-
 
   return (
     <div className="flex-1 w-full flex flex-col gap-12">
@@ -35,7 +37,6 @@ export default async function StudentPage() {
           {JSON.stringify(user, null, 2)}
         </pre>
       </div>
-    
     </div>
   );
 }

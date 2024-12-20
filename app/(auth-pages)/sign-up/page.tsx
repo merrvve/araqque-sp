@@ -23,7 +23,7 @@ export default async function Signup(props: {
       <form className="flex flex-col min-w-64 max-w-64 mx-auto">
         <h1 className="text-2xl font-medium">Kayıt Ol</h1>
         <p className="text-sm text text-foreground">
-          Hesabınız varsa giriş yapmak için {" "}
+          Hesabınız varsa giriş yapmak için{" "}
           <Link className="text-primary font-medium underline" href="/sign-in">
             tıklayınız.
           </Link>

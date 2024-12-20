@@ -3,11 +3,10 @@
 import { useState } from "react";
 import { LoadingModal } from "./LoadingModal";
 import { LoadingState } from "@/types/loadingState";
-import useQuestionStore from '../stores/questionStore';
-import { Question } from '../types/question';
+import useQuestionStore from "../stores/questionStore";
+import { Question } from "../types/question";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
-
 
 export const FileUpload = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -18,35 +17,60 @@ export const FileUpload = () => {
     time: 0,
     fileError: false,
     questionsError: false,
-    statusText: "Dosya Yükleniyor"
-  })
+    statusText: "Dosya Yükleniyor",
+  });
   const [openModal, setOpenModal] = useState(false);
   const handleFileChange = (e: any) => {
     const selectedFile = e.target.files[0];
     setFile(selectedFile);
   };
-  const { questions, addQuestion, clearQuestions, setHomeworkId } = useQuestionStore();
-  
+  const { questions, addQuestion, clearQuestions, setHomeworkId } =
+    useQuestionStore();
+
   let homeworkText = "";
-  
-  function selectQuestions(questionList1 : Question[],questionList2: Question[]) {
+
+  function selectQuestions(
+    questionList1: Question[],
+    questionList2: Question[],
+  ) {
     let selectedQuestions: Question[] = [];
     selectedQuestions = selectedQuestions
-      .concat(questionList1.filter(x=>x.question_type==="Doğru Yanlış Sorusu").slice(0,2))
-      .concat(questionList2.filter(x=>x.question_type==="Doğru Yanlış Sorusu")[1])
-      .concat(questionList1.filter(x=>x.question_type==="Boşluk Doldurma Sorusu")[1])
-      .concat(questionList2.filter(x=>x.question_type==="Boşluk Doldurma Sorusu").slice(0,2))
-      .concat(questionList1.filter(x=>x.question_type==="Çoktan Seçmeli Test Sorusu").slice(1,3))
-      .concat(questionList2.filter(x=>x.question_type==="Çoktan Seçmeli Test Sorusu")[0])
-      
-    ;
+      .concat(
+        questionList1
+          .filter((x) => x.question_type === "Doğru Yanlış Sorusu")
+          .slice(0, 2),
+      )
+      .concat(
+        questionList2.filter(
+          (x) => x.question_type === "Doğru Yanlış Sorusu",
+        )[1],
+      )
+      .concat(
+        questionList1.filter(
+          (x) => x.question_type === "Boşluk Doldurma Sorusu",
+        )[1],
+      )
+      .concat(
+        questionList2
+          .filter((x) => x.question_type === "Boşluk Doldurma Sorusu")
+          .slice(0, 2),
+      )
+      .concat(
+        questionList1
+          .filter((x) => x.question_type === "Çoktan Seçmeli Test Sorusu")
+          .slice(1, 3),
+      )
+      .concat(
+        questionList2.filter(
+          (x) => x.question_type === "Çoktan Seçmeli Test Sorusu",
+        )[0],
+      );
 
-    console.log(selectedQuestions)
+    console.log(selectedQuestions);
     return selectedQuestions;
   }
 
   const handleSubmit = async (e: any) => {
-    
     e.preventDefault();
 
     if (!file) {
@@ -70,10 +94,9 @@ export const FileUpload = () => {
       time: 0,
       fileError: false,
       questionsError: false,
-      statusText: "Dosya Yükleniyor"
-    })
+      statusText: "Dosya Yükleniyor",
+    });
     try {
-      
       const response = await fetch("/api/upload", {
         method: "POST",
         body: formDataToSend,
@@ -81,101 +104,127 @@ export const FileUpload = () => {
 
       if (!response.ok) {
         setLoadingState((prev) => ({ ...prev, fileError: true }));
-        setLoadingState((prev) => ({ ...prev, statusText: "Dosya Yüklenemedi. " }));
-        
-        console.log(response)
-        throw new Error("Dosya gönderilemedi. "+ response.statusText);
-      }
-      else {
+        setLoadingState((prev) => ({
+          ...prev,
+          statusText: "Dosya Yüklenemedi. ",
+        }));
+
+        console.log(response);
+        throw new Error("Dosya gönderilemedi. " + response.statusText);
+      } else {
         setLoadingState((prev) => ({ ...prev, fileUploaded: true }));
         const homeworkResult = await response.json();
         homeworkText = homeworkResult.Result.extractedText;
         const wordCount = homeworkResult.Result.wordCount;
-        setLoadingState((prev) => ({ ...prev, statusText: `Yüklenen dosyada yaklaşık ${wordCount} adet kelime tespit edildi.` }));
-        if(wordCount>40000) {
-                
-          setLoadingState((prev) => ({ ...prev, fileError: true, statusText: "Yüklenen dosya 40.000'den fazla kelime içermektedir." }));
+        setLoadingState((prev) => ({
+          ...prev,
+          statusText: `Yüklenen dosyada yaklaşık ${wordCount} adet kelime tespit edildi.`,
+        }));
+        if (wordCount > 40000) {
+          setLoadingState((prev) => ({
+            ...prev,
+            fileError: true,
+            statusText: "Yüklenen dosya 40.000'den fazla kelime içermektedir.",
+          }));
           return;
         }
-        if(wordCount<20001) {
-          try { 
+        if (wordCount < 20001) {
+          try {
             const openaiResponse = await fetch("/api/openai", {
               method: "POST",
               body: JSON.stringify({ text: homeworkText }),
             });
             if (!openaiResponse.ok) {
-              setLoadingState({ ...loadingState, questionsError: true, statusText:"Sorular oluşturulurken bir hata ile karşılaşıldı." });
+              setLoadingState({
+                ...loadingState,
+                questionsError: true,
+                statusText: "Sorular oluşturulurken bir hata ile karşılaşıldı.",
+              });
               console.log(openaiResponse);
               throw new Error("Openai hata");
             }
             const qas = await openaiResponse.json();
-            try {const questionsList = JSON.parse(qas.result).questions;
+            try {
+              const questionsList = JSON.parse(qas.result).questions;
               setLoadingState((prev) => ({
                 ...prev,
                 questionsError: false,
                 questionsPrepared: true,
                 questionCount: questionsList.length,
                 time: 15,
-                statusText: "Test oluşturma işlemi başarılı."
+                statusText: "Test oluşturma işlemi başarılı.",
               }));
               clearQuestions();
               questionsList.forEach((question: Question) => {
-                addQuestion(question)
+                addQuestion(question);
               });
-              
+
               console.log(questions);
+            } catch (error) {
+              setLoadingState({
+                ...loadingState,
+                questionsError: true,
+                statusText: "Sorular oluşturulurken bir hata ile karşılaşıldı.",
+              });
+              console.error("Error openai:", error);
             }
-            catch(error) {
-              setLoadingState({ ...loadingState, questionsError: true, statusText:"Sorular oluşturulurken bir hata ile karşılaşıldı." });
-            console.error("Error openai:", error);
-            }
-            
-            
           } catch (error) {
-            setLoadingState({ ...loadingState, questionsError: true, statusText:"Sorular oluşturulurken bir hata ile karşılaşıldı." });
+            setLoadingState({
+              ...loadingState,
+              questionsError: true,
+              statusText: "Sorular oluşturulurken bir hata ile karşılaşıldı.",
+            });
             console.error("Error openai:", error);
           }
-        }
-        else if(20000<wordCount && wordCount<40000) {
-          setLoadingState((prev) => ({ ...prev, statusText: `Yüklenen dosyada yaklaşık ${wordCount} adet kelime tespit edildi. Test oluşturma işlemi iki adımda gerçekleştirilecektir. Bu işlem birkaç dakikanızı alabilir. ` }));
-          try{
+        } else if (20000 < wordCount && wordCount < 40000) {
+          setLoadingState((prev) => ({
+            ...prev,
+            statusText: `Yüklenen dosyada yaklaşık ${wordCount} adet kelime tespit edildi. Test oluşturma işlemi iki adımda gerçekleştirilecektir. Bu işlem birkaç dakikanızı alabilir. `,
+          }));
+          try {
             const openaiResponse1 = await fetch("/api/openai", {
               method: "POST",
-              body: JSON.stringify({ text: homeworkText.slice(0,wordCount/2) }),
+              body: JSON.stringify({
+                text: homeworkText.slice(0, wordCount / 2),
+              }),
             });
             const openaiResponse2 = await fetch("/api/openai", {
               method: "POST",
-              body: JSON.stringify({ text: homeworkText.slice(wordCount/2) }),
+              body: JSON.stringify({ text: homeworkText.slice(wordCount / 2) }),
             });
             const qas1 = await openaiResponse1.json();
             const questionsList1 = JSON.parse(qas1.result).questions;
-      
+
             const qas2 = await openaiResponse2.json();
             const questionsList2 = JSON.parse(qas2.result).questions;
 
-            const selectedQuestions = selectQuestions(questionsList1,questionsList2)
-            
+            const selectedQuestions = selectQuestions(
+              questionsList1,
+              questionsList2,
+            );
+
             setLoadingState((prev) => ({
               ...prev,
               questionsError: false,
               questionsPrepared: true,
               questionCount: selectedQuestions.length,
               time: 15,
-              statusText: "Test oluşturma işlemi başarılı."
+              statusText: "Test oluşturma işlemi başarılı.",
             }));
             clearQuestions();
             selectedQuestions.forEach((question: Question) => {
-              addQuestion(question)
+              addQuestion(question);
             });
-          }
-          catch (error) {
-            setLoadingState({ ...loadingState, questionsError: true, statusText:"Sorular oluşturulurken bir hata ile karşılaşıldı." });
+          } catch (error) {
+            setLoadingState({
+              ...loadingState,
+              questionsError: true,
+              statusText: "Sorular oluşturulurken bir hata ile karşılaşıldı.",
+            });
             console.error("Error openai:", error);
           }
         }
-        
       }
-   
     } catch (error) {
       console.error("Error uploading file:", error);
     }
@@ -185,9 +234,10 @@ export const FileUpload = () => {
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen  pb-20 gap-16 ">
       <div className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
         <p>
-        Merhaba. Araqque&apos;ye hoşgeldiniz. <br /> Lütfen aşağıdaki adımları takip ederek testi başlatın.
+          Merhaba. Araqque&apos;ye hoşgeldiniz. <br /> Lütfen aşağıdaki adımları
+          takip ederek testi başlatın.
         </p>
-        
+
         <ol className="list-inside list-decimal text-sm text-center sm:text-left">
           <li className="mb-2">Ödev Kodunu Girin..</li>
           <li className="mb-2">Ödev Dosyanızı Yükleyin.</li>
@@ -196,8 +246,12 @@ export const FileUpload = () => {
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <Label>Ödev Kodu</Label>
-            <Input type="text" name="homeworkId" onChange={(e: any)=>setHomeworkId(e.target.value)}
-            disabled placeholder="Test amaçlı otomatik atanmıştır"
+            <Input
+              type="text"
+              name="homeworkId"
+              onChange={(e: any) => setHomeworkId(e.target.value)}
+              disabled
+              placeholder="Test amaçlı otomatik atanmıştır"
             />
           </div>
           <div className="flex items-center justify-center w-full mb-3">
@@ -222,7 +276,10 @@ export const FileUpload = () => {
                   />
                 </svg>
                 <p className="m-2 text-sm text-gray-500 dark:text-gray-400">
-                  <span className="font-semibold">Dosya yüklemek için tıklayın</span> ya da dosyayı bu alana sürükleyin
+                  <span className="font-semibold">
+                    Dosya yüklemek için tıklayın
+                  </span>{" "}
+                  ya da dosyayı bu alana sürükleyin
                 </p>
                 <p className="text-xs text-gray-500 dark:text-gray-400">
                   PDF, PPT, PPTX, DOC, DOCX, TXT
@@ -241,13 +298,12 @@ export const FileUpload = () => {
               />
             </label>
           </div>
-          {
-            file && 
+          {file && (
             <>
-              <div className="mt-3 mb-3 text-lg font-bold">{file?.name }</div>
+              <div className="mt-3 mb-3 text-lg font-bold">{file?.name}</div>
             </>
-          }
-          
+          )}
+
           <div className="flex gap-4 sm:justify-between flex-col sm:flex-row">
             <a
               className="rounded-lg border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4  sm:min-w-44"
@@ -282,7 +338,11 @@ export const FileUpload = () => {
       </div>
       {
         <>
-          <LoadingModal loadingState={loadingState} openModal={openModal} setOpenModal={setOpenModal}/>
+          <LoadingModal
+            loadingState={loadingState}
+            openModal={openModal}
+            setOpenModal={setOpenModal}
+          />
         </>
       }
     </div>

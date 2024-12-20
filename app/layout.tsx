@@ -31,31 +31,23 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          
           <main className="min-h-screen flex flex-col items-center px-1">
             <div className="flex-1 w-full flex flex-col gap-10 items-center">
-            <nav className="w-full flex  border-b border-b-foreground/10 h-16">
+              <nav className="w-full flex  border-b border-b-foreground/10 h-16">
                 <div className="w-full flex justify-between  p-3 px-5 text-sm">
                   <div className="flex gap-5 items-center font-semibold">
                     <Link href={"/"}>Araqque</Link>
-                    
                   </div>
                   <div className="flex gap-5">
-                  {!hasEnvVars ? <EnvVarWarning /> : <HeaderAuth />}
-                  <ThemeSwitcher />
+                    {!hasEnvVars ? <EnvVarWarning /> : <HeaderAuth />}
+                    <ThemeSwitcher />
                   </div>
-                  
                 </div>
               </nav>
-              <div className="w-full md:p-5 p-1">
-                {children}
-              </div>
+              <div className="w-full md:p-5 p-1">{children}</div>
 
               <footer className="w-full flex   border-t mx-auto text-center text-xs gap-8 p-8">
-                <p>
-                  Araqque
-                 </p>
-                
+                <p>Araqque</p>
               </footer>
             </div>
           </main>

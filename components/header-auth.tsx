@@ -8,13 +8,13 @@ import { createClient } from "@/utils/supabase/client"; // Use client-side Supab
 import { hasEnvVars } from "@/utils/supabase/check-env-vars";
 import { redirect } from "next/navigation";
 export default function AuthButton() {
-  const { setUser } = useAuthStore(); 
+  const { setUser } = useAuthStore();
   const user = useAuthStore((state) => state.user);
   const handleSignOut = async () => {
     const supabase = createClient();
     await supabase.auth.signOut();
     setUser(null); // Clear the user state in Zustand
-    redirect('/sign-in')
+    redirect("/sign-in");
   };
 
   if (!hasEnvVars) {

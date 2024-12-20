@@ -8,7 +8,11 @@ type TimeProp = {
   onTimeOut: () => void;
 };
 
-export const CountdownTimer = ({ initialTime, quizState, onTimeOut }: TimeProp) => {
+export const CountdownTimer = ({
+  initialTime,
+  quizState,
+  onTimeOut,
+}: TimeProp) => {
   const [timeRemaining, setTimeRemaining] = useState(initialTime);
 
   useEffect(() => {
@@ -38,13 +42,13 @@ export const CountdownTimer = ({ initialTime, quizState, onTimeOut }: TimeProp) 
   const seconds = timeRemaining % 60;
 
   return (
-    
     <div className="font-bold text-2xl">
-      {quizState && <>
-        <h2>Kalan Süre:</h2>
-        <p className="leading-loose">{`${minutes} dk ${seconds} sn`}</p>
-      </>}
-      
+      {quizState && (
+        <>
+          <h2>Kalan Süre:</h2>
+          <p className="leading-loose">{`${minutes} dk ${seconds} sn`}</p>
+        </>
+      )}
     </div>
   );
 };

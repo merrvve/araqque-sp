@@ -1,13 +1,5 @@
+import officeParser from "officeparser";
 
-import officeParser from 'officeparser'
-
-
-
-export async function extractText(buffer: Buffer) : Promise<string> {
-    return officeParser.parseOfficeAsync(buffer);
-    
-    
+export async function extractText(buffer: Buffer): Promise<string> {
+  return officeParser.parseOfficeAsync(buffer);
 }
-
-
-

@@ -32,7 +32,7 @@ export default function QuizResultsPage() {
       }
 
       setQuizResult(data);
-      console.log(data)
+      console.log(data);
     };
 
     fetchQuizResults();
@@ -43,19 +43,28 @@ export default function QuizResultsPage() {
   return (
     <div className="p-4">
       <h1 className="text-xl font-semibold mb-4">
-        {quizResult?.student_id} No'lu Öğrenci {quizResultId} Nolu Değerlendirme Ayrıntıları
+        {quizResult?.student_id} No'lu Öğrenci {quizResultId} Nolu Değerlendirme
+        Ayrıntıları
       </h1>
       {quizResult ? (
         <div>
           {quizResult.questions.map((question: any, index: number) => (
             <div key={index} className="mb-4">
-              <h2 className="font-medium">Soru {index + 1}: {question.question}</h2>
-              <div className={question.isCorrect ? 'text-green-800' : 'text-red-800'}>
-              <p>Doğru Cevap: {question.correct_answer}</p>
-              <p>Öğrenci Cevap: {question.student_answer}</p>
-              <p>Cevaplama Süresi {(question.completion_time / 1000).toFixed(2)} sn</p>
+              <h2 className="font-medium">
+                Soru {index + 1}: {question.question}
+              </h2>
+              <div
+                className={
+                  question.isCorrect ? "text-green-800" : "text-red-800"
+                }
+              >
+                <p>Doğru Cevap: {question.correct_answer}</p>
+                <p>Öğrenci Cevap: {question.student_answer}</p>
+                <p>
+                  Cevaplama Süresi{" "}
+                  {(question.completion_time / 1000).toFixed(2)} sn
+                </p>
               </div>
-              
             </div>
           ))}
         </div>

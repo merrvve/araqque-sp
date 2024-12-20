@@ -7,7 +7,7 @@ import { createClient } from "@/utils/supabase/client";
 import { useParams, useRouter } from "next/navigation";
 export default function QuizResultsPage() {
   const { homeworkId } = useParams();
-    const router = useRouter();
+  const router = useRouter();
   const [quizResults, setQuizResults] = useState<QuizResult[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -39,10 +39,9 @@ export default function QuizResultsPage() {
   if (loading) return <p>Sonuçlar yükleniyor...</p>;
 
   const handleRowClick = (quizResultId: string | undefined) => {
-    if(quizResultId) {
-        router.push(`/trainer/homework/quiz-result/${quizResultId}`); 
+    if (quizResultId) {
+      router.push(`/trainer/homework/quiz-result/${quizResultId}`);
     }
-
   };
   return (
     <div className="p-4">
@@ -64,13 +63,15 @@ export default function QuizResultsPage() {
             {quizResults.map((result, index) => {
               // Calculate the count of correct answers for each result
               const correctCount = result.questions.filter(
-                (question) => question.isCorrect
+                (question) => question.isCorrect,
               ).length;
 
               return (
-                <tr key={result.id}
-                 className="cursor-pointer hover:bg-slate-100"
-                onClick={() => handleRowClick(result.id)}>
+                <tr
+                  key={result.id}
+                  className="cursor-pointer hover:bg-slate-100"
+                  onClick={() => handleRowClick(result.id)}
+                >
                   <td className="border border-gray-300 px-4 py-2">
                     {index + 1}
                   </td>

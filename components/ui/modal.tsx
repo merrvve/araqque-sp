@@ -1,7 +1,7 @@
 "use client";
 
-import React, { FC } from 'react';
-import ReactDOM from 'react-dom';
+import React, { FC } from "react";
+import ReactDOM from "react-dom";
 
 interface ModalProps {
   show: boolean;
@@ -30,7 +30,7 @@ export const Modal: FC<ModalProps> & {
         {children}
       </div>
     </div>,
-    document.body
+    document.body,
   );
 };
 

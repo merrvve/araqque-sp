@@ -1,5 +1,5 @@
-import { create } from 'zustand';
-
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
 // Define the user type
 export type UserType = {
   id: string;
@@ -44,8 +44,16 @@ interface AuthStore {
 }
 
 // Create the Zustand store
-export const useAuthStore = create<AuthStore>((set) => ({
-  user: null,
-  setUser: (user) => set({ user }),
-  clearUser: () => set({ user: null }),
-}));
+export const useAuthStore = create<AuthStore>()(
+  persist(
+    (set) => ({
+      user: null, // Initial state of the user is null
+      setUser: (user) => set(() => ({ user })), // Sets the user object
+      clearUser: () => set(() => ({ user: null })), // Clears the user
+    }),
+    {
+      name: "auth-store", // The key to store data in localStorage
+      partialize: (state) => ({ user: state.user }), // Only persist the user object
+    },
+  ),
+);

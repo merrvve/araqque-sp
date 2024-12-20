@@ -1,29 +1,14 @@
-
+"use client";
 import CreateHomeWork from "@/components/trainer/CreateHomework";
-
-import { createClient } from "@/utils/supabase/server";
+import { useAuthStore } from "@/stores/authStore";
 
 import { redirect } from "next/navigation";
 
-export default async function ProtectedPage() {
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
+export default function ProtectedPage() {
+  const { user } = useAuthStore();
   if (!user) {
     return redirect("/sign-in");
   }
 
-  
-  return (
-
-      
-      <CreateHomeWork user={user}/>
-    
-      
-    
-    
-  );
+  return <CreateHomeWork user={user} />;
 }

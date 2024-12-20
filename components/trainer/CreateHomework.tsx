@@ -1,22 +1,22 @@
 "use client";
 
-import { useState } from 'react';
-import { Share2, Copy } from 'lucide-react'; 
+import { useState } from "react";
+import { Share2, Copy } from "lucide-react";
 
 type Props = {
   user: any;
 };
 
 const CreateHomework: React.FC<Props> = ({ user }) => {
-  const [homeworkName, setHomeworkName] = useState('');
-  const [homeworkId, setHomeworkId] = useState('');
+  const [homeworkName, setHomeworkName] = useState("");
+  const [homeworkId, setHomeworkId] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
-  const handleSubmit = async (e:any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setError('');
+    setError("");
 
     // Use the user props directly for trainer_id and trainer_name
     const homeworkData = {
@@ -26,22 +26,22 @@ const CreateHomework: React.FC<Props> = ({ user }) => {
     };
 
     try {
-      const res = await fetch('/api/homework/create-homework', {
-        method: 'POST',
+      const res = await fetch("/api/homework/create-homework", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(homeworkData),
       });
 
       if (!res.ok) {
-        console.log(res)
-        throw new Error('Failed to create homework');
+        console.log(res);
+        throw new Error("Failed to create homework");
       }
 
       const data = await res.json();
       setHomeworkId(data.id); // Set the returned homework ID
-    } catch (err:any) {
+    } catch (err: any) {
       setError(err.message);
     } finally {
       setIsSubmitting(false);
@@ -50,13 +50,11 @@ const CreateHomework: React.FC<Props> = ({ user }) => {
 
   const handleCopy = () => {
     navigator.clipboard.writeText(homeworkId).then(() => {
-      alert('Ödev Kodu kopyalandı');
+      alert("Ödev Kodu kopyalandı");
     });
   };
 
-  const handleShare = () => {
-   
-  };
+  const handleShare = () => {};
 
   return (
     <div className="max-w-lg p-6 shadow-md rounded-lg border  border-slate-100">
@@ -65,7 +63,9 @@ const CreateHomework: React.FC<Props> = ({ user }) => {
       <form onSubmit={handleSubmit}>
         {/* Homework Name */}
         <div className="mb-6">
-          <label htmlFor="homeworkName" className="block text-sm font-medium">Ödev Adı</label>
+          <label htmlFor="homeworkName" className="block text-sm font-medium">
+            Ödev Adı
+          </label>
           <input
             type="text"
             id="homeworkName"
@@ -78,10 +78,10 @@ const CreateHomework: React.FC<Props> = ({ user }) => {
 
         <button
           type="submit"
-          className={`w-full p-2 bg-slate-900 text-white rounded-md hover:bg-slate-700 font-semibold  ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+          className={`w-full p-2 bg-slate-900 text-white rounded-md hover:bg-slate-700 font-semibold  ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""}`}
           disabled={isSubmitting}
         >
-          {isSubmitting ? 'Ödev Kodu Oluşturuluyor...' : 'Ödev Kodu Oluştur'}
+          {isSubmitting ? "Ödev Kodu Oluşturuluyor..." : "Ödev Kodu Oluştur"}
         </button>
       </form>
 
@@ -89,7 +89,9 @@ const CreateHomework: React.FC<Props> = ({ user }) => {
 
       {homeworkId && (
         <div className="mt-6">
-          <label className="block text-sm font-medium text-gray-700">Ödev Kodu</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Ödev Kodu
+          </label>
           <div className="flex items-center space-x-2 mt-2">
             <input
               type="text"

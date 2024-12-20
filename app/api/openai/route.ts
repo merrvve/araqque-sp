@@ -1,13 +1,13 @@
-import OpenAI from 'openai';
-import { NextResponse } from 'next/server';
+import OpenAI from "openai";
+import { NextResponse } from "next/server";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-export async function POST(req:any) {
+export async function POST(req: any) {
   const { text } = await req.json();
-  
+
   // Define a clear and structured prompt for generating questions in Turkish
   const systemPrompt = `
     Aşağıdaki ödev metnine dayanarak, ödevin hazırlandığı dilde toplam 9 soru oluştur. Aşağıdaki formatı kullanarak her soru için doğru cevabı da ekle:
@@ -95,30 +95,29 @@ export async function POST(req:any) {
       }
     ]
 
-`
+`;
 
   const userPrompt = `
   **Ödev Metni**:
-    "${text}"`
+    "${text}"`;
 
   // Check if text exists
   if (text) {
-  //   const response = await openai.chat.completions.create({
-  //     model: "gpt-3.5-turbo",
-  //     messages: [{"role": "user", "content": [{type:'text', text:prompt}]}]  ,
-  //     response_format:{ "type": "json_object" }
-  //   });
-   
-  //   const completion = await openai.completions.create({
-  //     model: "gpt-3.5-turbo-instruct",
-  //     prompt: prompt,
-  //     max_tokens: 20,
-  //     temperature: 0,
-  //   });
-  //  console.log(response)
+    //   const response = await openai.chat.completions.create({
+    //     model: "gpt-3.5-turbo",
+    //     messages: [{"role": "user", "content": [{type:'text', text:prompt}]}]  ,
+    //     response_format:{ "type": "json_object" }
+    //   });
 
-   
-  //     return NextResponse.json({result: response.choices[0].message.content});
+    //   const completion = await openai.completions.create({
+    //     model: "gpt-3.5-turbo-instruct",
+    //     prompt: prompt,
+    //     max_tokens: 20,
+    //     temperature: 0,
+    //   });
+    //  console.log(response)
+
+    //     return NextResponse.json({result: response.choices[0].message.content});
     const sampleResponse = `
     {
       "questions": [
@@ -190,35 +189,28 @@ export async function POST(req:any) {
     `;
 
     //return NextResponse.json({result: sampleResponse});
-      try {
-        const response = await openai.chat.completions.create({
-          model: "gpt-4o-mini", 
-          messages: [
-            {
-              role: "system",
-              content: sysprompt2,
-            },
-            {
-              role: "user",
-              content: userPrompt,
-            },
-          ],
-          
-          response_format: { "type": "json_object" },
-          
-        });
-    
-    
-        return NextResponse.json({result: response.choices[0].message.content});
-      } catch (error) {
-        return NextResponse.json({ Message: error, status: 500 });
-      }
+    try {
+      const response = await openai.chat.completions.create({
+        model: "gpt-4o-mini",
+        messages: [
+          {
+            role: "system",
+            content: sysprompt2,
+          },
+          {
+            role: "user",
+            content: userPrompt,
+          },
+        ],
+
+        response_format: { type: "json_object" },
+      });
+
+      return NextResponse.json({ result: response.choices[0].message.content });
+    } catch (error) {
+      return NextResponse.json({ Message: error, status: 500 });
+    }
   } else {
-    return NextResponse.json({ Message: 'No Text Input', status: 500 });
+    return NextResponse.json({ Message: "No Text Input", status: 500 });
   }
-
-  
 }
-
-
-

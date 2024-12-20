@@ -12,14 +12,14 @@ import { createClient } from "@/utils/supabase/client";
 export default function Quiz() {
   const [activeQuestion, setActiveQuestion] = useState(0);
   const [quizState, setQuizState] = useState(true);
-  const [answers, setAnswers] = useState<string[]>(Array(9).fill("")); 
+  const [answers, setAnswers] = useState<string[]>(Array(9).fill(""));
   const [correctCount, setCorrectCount] = useState<number>(0);
   const [answerStatuses, setAnswerStatuses] = useState<boolean[]>([]);
   const { questions, updateQuestionExamin, homeworkId } = useQuestionStore();
-  const { user } = useAuthStore(); 
+  const { user } = useAuthStore();
 
-  if(!user) {
-    redirect('/sign-in')
+  if (!user) {
+    redirect("/sign-in");
   }
 
   const supabase = createClient();
@@ -50,34 +50,68 @@ export default function Quiz() {
         .insert([quizResult])
         .select()
         .single();
-        
-      console.log(data,error)
+
+      if (error) {
+        console.error("Error saving quiz result:", error);
+        return;
+      }
+
       console.log("Quiz result saved successfully:", data);
     } catch (error) {
       console.error("Error saving quiz result:", error);
     }
   };
+
+  const fetchTrainerId = async (
+    homeworkId: string,
+  ): Promise<string | undefined> => {
+    try {
+      const { data, error } = await supabase
+        .from("homework") // Replace with your table name
+        .select("trainer_id")
+        .eq("id", homeworkId)
+        .single();
+
+      if (error) {
+        console.error("Error fetching trainer_id:", error);
+        return undefined;
+      }
+
+      return data?.trainer_id;
+    } catch (error) {
+      console.error("Error fetching trainer_id:", error);
+      return undefined;
+    }
+  };
+
   // Check answers once when the quiz ends
   useEffect(() => {
-    if (!quizState) {
-      const statuses = questions.map((question : Question, index: number) =>
-        handleAnswerCheck(question, answers[index])
-      );
-      setAnswerStatuses(statuses);
-      setCorrectCount(statuses.filter((status: any) => status).length);
+    const saveQuiz = async () => {
+      if (!quizState) {
+        const statuses = questions.map((question: Question, index: number) =>
+          handleAnswerCheck(question, answers[index]),
+        );
+        setAnswerStatuses(statuses);
+        setCorrectCount(statuses.filter((status: any) => status).length);
 
+        // Fetch trainer_id and construct the quizResult object
+        const trainerId = await fetchTrainerId(
+          "d31a8ae1-b0b3-4957-abcc-916b8ae54a38",
+        );
 
+        const quizResult: QuizResult = {
+          student_id: user.id,
+          homework_id: "d31a8ae1-b0b3-4957-abcc-916b8ae54a38",
+          trainer_id: trainerId,
+          questions: questions,
+        };
 
-      const quizResult: QuizResult = {
-        student_id: user.id,
-        homework_id: "d31a8ae1-b0b3-4957-abcc-916b8ae54a38",
-        questions: questions
+        console.log(quizResult);
+        await saveQuizResult(quizResult);
       }
-      console.log(quizResult);
-      saveQuizResult(quizResult);
+    };
 
-      
-    }
+    saveQuiz();
   }, [quizState]);
 
   function handleAnswerCheck(question: Question, student_answer: string) {
@@ -85,23 +119,27 @@ export default function Quiz() {
     const lowerStudentAnswer = student_answer.toLowerCase();
 
     if (question.question_type === "Çoktan Seçmeli Test Sorusu") {
-      const isCorrect = lowerCorrectAnswer[0] === lowerStudentAnswer[0]
-     
+      const isCorrect = lowerCorrectAnswer[0] === lowerStudentAnswer[0];
+
       return isCorrect;
     }
-    const isCorrect =  lowerCorrectAnswer === lowerStudentAnswer;
-    
+    const isCorrect = lowerCorrectAnswer === lowerStudentAnswer;
+
     return isCorrect;
   }
 
   return (
     <>
-    {activeQuestion < 9 && quizState && (
-      <div className="flex justify-end p-5">
-        <CountdownTimer initialTime={900} quizState={quizState} onTimeOut={handleTimeOut} />
-      </div>
-    )}
-      
+      {activeQuestion < 9 && quizState && (
+        <div className="flex justify-end p-5">
+          <CountdownTimer
+            initialTime={900}
+            quizState={quizState}
+            onTimeOut={handleTimeOut}
+          />
+        </div>
+      )}
+
       <div>
         <QuestionList
           activeQuestion={activeQuestion}
@@ -123,67 +161,75 @@ export default function Quiz() {
       </div>
       {!quizState && (
         <>
-        <div className="grid grid-cols-5 gap-1">
-          <div>
-          <strong className="underline">Soru:</strong>
-            <ul>
-              {answers.map((answer, index) => (
-                <li key={index}>
-                  {/* <Tooltip content={questions[index].question}>
+          <div className="grid grid-cols-5 gap-1">
+            <div>
+              <strong className="underline">Soru:</strong>
+              <ul>
+                {answers.map((answer, index) => (
+                  <li key={index}>
+                    {/* <Tooltip content={questions[index].question}>
                     
                   </Tooltip> */}
-                  <strong>Soru {index + 1}</strong>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <strong className="underline">Cevaplarınız:</strong>
-            <ul>
-              {answers.map((answer, index) => (
-                <li key={index}>
-                   {answer}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <strong className="underline">Doğru Cevaplar:</strong>
-            <ul>
-              {questions.map((question: Question,index : number) => (
+                    <strong>Soru {index + 1}</strong>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <strong className="underline">Cevaplarınız:</strong>
+              <ul>
+                {answers.map((answer, index) => (
+                  <li key={index}>{answer}</li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <strong className="underline">Doğru Cevaplar:</strong>
+              <ul>
+                {questions.map((question: Question, index: number) => (
                   <li key={index}>{question.correct_answer}</li>
-                
-              ))}
-            </ul>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <strong className="underline">Değerlendirme:</strong>
+
+              <ul>
+                {answerStatuses.map((status, index) => (
+                  <li key={index} className="m-1">
+                    {status ? (
+                      <span color="success">Doğru</span>
+                    ) : (
+                      <span color="failure">Yanlış</span>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <strong className="underline">Cevaplanma Süresi:</strong>
+              <ul>
+                {questions.map((question: Question, index: number) => (
+                  <li key={index}>
+                    {question.completion_time
+                      ? (question.completion_time / 1000).toFixed(2)
+                      : 0}{" "}
+                    sn
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
-          <div>
-            <strong className="underline">Değerlendirme:</strong>
-            
-            <ul>
-              {answerStatuses.map((status, index) => (
-                <li key={index} className="m-1">
-                  {status ? <span color="success">Doğru</span> : <span color="failure">Yanlış</span>}
-                </li>
-              ))}
-            </ul>
+          <div className="flex justify-end items-end p-1 sm:mr-10">
+            <h2 className="text-xl font-bold m-1">Toplam: </h2>
+            <span color="success" className="m-2 w-20">
+              {correctCount} Doğru
+            </span>
+            <span color="failure" className="m-2 w-20">
+              {9 - correctCount} Yanlış
+            </span>
           </div>
-          <div>
-            <strong className="underline">Cevaplanma Süresi:</strong>
-            <ul>
-              {questions.map((question : Question, index: number) => (
-                <li key={index}>{question.completion_time ? (question.completion_time / 1000).toFixed(2) : 0} sn</li>
-              ))}
-            </ul>
-          </div>
-        </div>
-        <div className="flex justify-end items-end p-1 sm:mr-10">
-              <h2 className="text-xl font-bold m-1">Toplam: </h2>
-                <span color="success" className="m-2 w-20">{correctCount} Doğru</span> 
-                <span color="failure" className="m-2 w-20">{9-correctCount} Yanlış</span> 
-              
-        </div>
         </>
-        
       )}
     </>
   );

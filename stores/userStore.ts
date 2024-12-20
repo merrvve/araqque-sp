@@ -24,7 +24,6 @@ export const useUserStore = create<UserStoreState>((set) => ({
   // Set user state
   setUser: (userData) => {
     set({ user: userData, isAuthenticated: true });
-    
   },
 
   // Clear user state
@@ -32,5 +31,3 @@ export const useUserStore = create<UserStoreState>((set) => ({
     set({ user: null, isAuthenticated: false });
   },
 }));
-
-
