@@ -2,13 +2,14 @@
 import CreateHomeWork from "@/components/trainer/CreateHomework";
 import { useAuthStore } from "@/stores/authStore";
 
-import { redirect } from "next/navigation";
 
-export default function ProtectedPage() {
+import { useEffect } from "react";
+
+export default function TrainerPage() {
   const { user } = useAuthStore();
-  if (!user) {
-    return redirect("/sign-in");
-  }
-
+  
+  useEffect(() => {
+    if (!user) return;
+  }, [user]);
   return <CreateHomeWork user={user} />;
 }

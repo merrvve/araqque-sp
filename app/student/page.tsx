@@ -5,6 +5,7 @@ import { InfoIcon } from "lucide-react";
 import { redirect } from "next/navigation";
 
 import { useAuthStore } from "@/stores/authStore";
+import { useEffect } from "react";
 
 export default function StudentPage() {
   // const supabase = createClient();
@@ -16,11 +17,11 @@ export default function StudentPage() {
   // if (!user) {
   //   return redirect("/sign-in");
   // }
-
-  const { user } = useAuthStore();
-  if (!user) {
-    return redirect("/sign-in");
-  }
+ const { user } = useAuthStore();
+  
+  useEffect(() => {
+    if (!user) return;
+  }, [user]);
 
   return (
     <div className="flex-1 w-full flex flex-col gap-12">
