@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
-import { useAuthStore } from "@/stores/authStore"; // Import the Zustand store
-import { createClient } from "@/utils/supabase/client"; // Use client-side Supabase instance
+import { useAuthStore } from "@/stores/authStore"; 
+import { createClient } from "@/utils/supabase/client"; 
 import { hasEnvVars } from "@/utils/supabase/check-env-vars";
 import { redirect } from "next/navigation";
 export default function AuthButton() {

@@ -1,9 +1,17 @@
 "use client";
 import { useAuthStore } from "@/stores/authStore";
 import { Book, ClipboardList, UserCircle, LogOut } from "lucide-react";
+import { createClient } from "@/utils/supabase/client"; 
+import { redirect } from "next/navigation";
 
 export const SideBar = () => {
-  const { clearUser } = useAuthStore();
+  const { setUser } = useAuthStore();
+  const handleSignOut = async () => {
+      const supabase = createClient();
+      await supabase.auth.signOut();
+      setUser(null); // Clear the user state in Zustand
+      redirect("/sign-in");
+    };
   return (
     <div className="flex flex-col w-64 border border-slate-100 rounded-lg shadow-lg overflow-hidden">
       {/* Header */}
@@ -43,7 +51,7 @@ export const SideBar = () => {
 
           {/* Sign Out */}
           <a
-            onClick={() => clearUser()}
+            onClick={() => handleSignOut()}
             href="/"
             className="flex items-center px-4 py-3 rounded-lg hover:bg-red-300 transition"
           >

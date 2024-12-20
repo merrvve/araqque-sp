@@ -2,7 +2,7 @@
 import { FileUpload } from "@/components/FileUpload";
 
 import { InfoIcon } from "lucide-react";
-import { redirect } from "next/navigation";
+
 
 import { useAuthStore } from "@/stores/authStore";
 import { useEffect } from "react";
